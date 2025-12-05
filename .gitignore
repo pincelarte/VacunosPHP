@@ -1,0 +1,59 @@
+# -------------------------------------------------------------------
+# 1. DEPENDENCIAS Y BINARIOS
+# -------------------------------------------------------------------
+
+# Excluye las dependencias de PHP (Composer)
+/src/vendor/
+
+# Excluye las dependencias de Node.js/NPM (si usas Laravel Mix/Vite)
+/src/node_modules
+
+# Excluye los archivos binarios de compilación
+/src/public/hot
+/src/public/storage
+/src/public/build
+
+# -------------------------------------------------------------------
+# 2. ARCHIVOS DE ENTORNO Y CLAVES
+# -------------------------------------------------------------------
+
+# Excluye el archivo de variables de entorno (¡CRUCIAL para las contraseñas!)
+/.env
+
+# Si usas Laravel Sail (opcional)
+/src/.env.sail
+
+# -------------------------------------------------------------------
+# 3. ARCHIVOS DE LA APLICACIÓN GENERADOS POR LARAVEL
+# -------------------------------------------------------------------
+
+# Directorios de caché, logs, sessions, etc. (El proceso PHP escribe aquí)
+/src/storage/*.key
+/src/bootstrap/cache/
+/src/storage/app/
+/src/storage/framework/
+/src/storage/logs/
+/src/storage/debugbar/
+
+# Archivos de caché de Laravel Pint
+/src/.pint.json
+
+# -------------------------------------------------------------------
+# 4. ARCHIVOS DE PRUEBAS
+# -------------------------------------------------------------------
+
+# Archivo de configuración de PHPUnit (si lo vas a usar)
+/src/phpunit.xml
+
+# -------------------------------------------------------------------
+# 5. ARCHIVOS ESPECÍFICOS DE DOCKER Y DEL SISTEMA
+# -------------------------------------------------------------------
+
+# Logs de Docker
+*.log
+
+# Archivos temporales de tu sistema operativo/editor
+.DS_Store
+.vscode/
+.idea/
+.history

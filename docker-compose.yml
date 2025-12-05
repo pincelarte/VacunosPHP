@@ -1,0 +1,56 @@
+version: '3.8'
+services:
+
+  # 1. SERVICIO DE LA APLICACIÓN (PHP-FPM)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Pasar tu UID/GID a Docker para igualar permisos (soluciona muchos conflictos)
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    container_name: laravel_app
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      # Carga las variables de entorno para la conexión DB
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db
+    # Exponemos el puerto para comunicación interna
+    expose:
+      - 9000
+
+  # 2. SERVIDOR WEB (Nginx de Docker Hub)
+  web:
+    image: nginx:stable-alpine
+    container_name: laravel_web
+    ports:
+      # Puerto 8080 en tu máquina -> Puerto 80 en el contenedor (Asegúrate que 8080 esté libre)
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro # :ro = solo lectura
+    depends_on:
+      - app
+
+  # 3. BASE DE DATOS (MySQL de Docker Hub)
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
