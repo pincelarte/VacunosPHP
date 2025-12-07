@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Establecimiento; // <-- ¡LÍNEA AÑADIDA!
 
 class User extends Authenticatable
 {
@@ -32,6 +33,14 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /**
+     * RELACIÓN: Un Usuario tiene muchos Establecimientos (One-to-Many)
+     */
+    public function establecimientos()
+    {
+        return $this->hasMany(Establecimiento::class);
+    }
 
     /**
      * Get the attributes that should be cast.

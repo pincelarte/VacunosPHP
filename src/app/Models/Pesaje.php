@@ -22,6 +22,7 @@ class Pesaje extends Model
     // En este caso, asegura que 'fecha_pesaje' se maneje como un objeto de fecha/hora de PHP.
     protected $casts = [
         'fecha_pesaje' => 'date',
+        'peso_kg' => 'decimal:2',
     ];
 
     // RELACIÓN: Un Pesaje pertenece a un Vacuno (Many-to-One)

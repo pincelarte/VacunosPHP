@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('edad_estimada_meses')->nullable();
 
             // 4. OTROS DATOS
-            $table->float('peso_kg')->nullable();
+            $table->decimal('peso_kg', 8, 2)->nullable();
             $table->text('historial_notas')->nullable();
 
             $table->timestamps();

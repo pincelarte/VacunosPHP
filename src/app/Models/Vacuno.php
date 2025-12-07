@@ -23,6 +23,12 @@ class Vacuno extends Model
         'establecimiento_id', // <--- 2. CAMBIO CLAVE: Clave foránea añadida
     ];
 
+    // PROPIEDAD $casts: Convierte automáticamente tipos de datos
+    protected $casts = [
+        'fecha_nacimiento' => 'date',
+        'peso_kg' => 'decimal:2',
+    ];
+
     // 3. NUEVA RELACIÓN: Un Vacuno pertenece a un Establecimiento (Many-to-One)
     public function establecimiento()
     {
