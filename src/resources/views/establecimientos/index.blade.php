@@ -26,18 +26,35 @@
                     </h3>
 
                     @forelse ($establecimientos as $establecimiento)
-                    <div class="border-b py-2 flex justify-between items-center">
+                    <div class="border-b py-4 flex justify-between items-center">
                         <div>
-                            <p class="text-sm font-semibold">{{ $establecimiento->nombre }}</p>
-                            <p class="text-xs text-gray-500">{{ $establecimiento->direccion ?: 'Sin dirección' }}</p>
+                            <p class="text-lg font-semibold">{{ $establecimiento->nombre }}</p>
+                            <p class="text-sm text-gray-500">{{ $establecimiento->direccion ?: 'Sin dirección' }}</p>
                         </div>
-                    </div>
-                    @empty
-                    <p class="text-gray-500">Aún no tienes establecimientos registrados.</p>
-                    @endforelse
 
+                        <div class="flex space-x-2">
+                            <button type="button" onclick="window.location.href='{{ route('establecimientos.show', $establecimiento) }}'" class="inline-flex items-center px-3 py-1 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Ver
+                            </button>
+
+                            <button type="button" onclick="window.location.href='{{ route('establecimientos.edit', $establecimiento) }}'" class="inline-flex items-center px-3 py-1 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                Editar
+                            </button>
+
+                            <form action="{{ route('establecimientos.destroy', $establecimiento) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este establecimiento?');" class="inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                        @empty
+                        <p class="text-gray-500">Aún no tienes establecimientos registrados.</p>
+                        @endforelse
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 </x-app-layout>

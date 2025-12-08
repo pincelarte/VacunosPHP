@@ -12,6 +12,9 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    /**
+     * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Establecimiento> $establecimientos
+     */
 
     /**
      * The attributes that are mass assignable.

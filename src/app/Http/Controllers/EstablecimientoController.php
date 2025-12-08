@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Establecimiento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth; // <-- Importar el facade de autenticación
+use Illuminate\Support\Facades\Auth;
 
 class EstablecimientoController extends Controller
 {
@@ -13,10 +13,7 @@ class EstablecimientoController extends Controller
      */
     public function index()
     {
-        // 1. Obtener solo los establecimientos del usuario que está logueado
         $establecimientos = Auth::user()->establecimientos;
-
-        // 2. Retornar la vista 'index' y pasarle los datos
         return view('establecimientos.index', compact('establecimientos'));
     }
 
@@ -25,7 +22,6 @@ class EstablecimientoController extends Controller
      */
     public function create()
     {
-        // Retorna la vista Blade que contiene el formulario HTML
         return view('establecimientos.create');
     }
 
@@ -34,24 +30,93 @@ class EstablecimientoController extends Controller
      */
     public function store(Request $request)
     {
-        // 1. Validación de los datos
         $request->validate([
             'nombre' => 'required|string|max:100',
             'direccion' => 'nullable|string|max:255',
         ]);
 
-        // 2. Creación del registro: Asociando el Establecimiento al usuario logueado
-        Establecimiento::create([
-            'user_id' => Auth::id(), // Clave foránea tomada automáticamente del usuario logueado
+        Auth::user()->establecimientos()->create([
             'nombre' => $request->nombre,
             'direccion' => $request->direccion,
         ]);
 
-        // 3. Redirección
         return redirect()->route('establecimientos.index')
             ->with('success', 'Establecimiento creado con éxito.');
     }
+    /**
+     * Muestra los detalles de un establecimiento.
+     */
+    public function show(Establecimiento $establecimiento)
+    {
+        // Autorización
+        if (Auth::id() !== $establecimiento->user_id) {
+            abort(403, 'No tienes permiso para ver este establecimiento.');
+        }
 
-    // Los métodos show, edit, update y destroy quedan por ahora vacíos.
-    // Los completaremos si los necesitas para la edición o eliminación.
+        return view('establecimientos.show', compact('establecimiento'));
+    }
+
+    // ------------------------------------------------------------------
+    // MÉTODOS AÑADIDOS PARA EDICIÓN Y ELIMINACIÓN
+    // ------------------------------------------------------------------
+
+    // ------------------------------------------------------------------
+    // MÉTODOS AÑADIDOS PARA EDICIÓN Y ELIMINACIÓN
+    // ------------------------------------------------------------------
+
+    /**
+     * Muestra el formulario para editar un establecimiento.
+     */
+    public function edit(Establecimiento $establecimiento)
+    {
+        // 1. Autorización: Verifica que el usuario logueado sea el dueño
+        if (Auth::id() !== $establecimiento->user_id) {
+            abort(403, 'No tienes permiso para editar este establecimiento.');
+        }
+
+        // 2. Retorna la vista de edición
+        return view('establecimientos.edit', compact('establecimiento'));
+    }
+
+    /**
+     * Actualiza un establecimiento en la base de datos.
+     */
+    public function update(Request $request, Establecimiento $establecimiento)
+    {
+        // 1. Autorización
+        if (Auth::id() !== $establecimiento->user_id) {
+            abort(403, 'No tienes permiso para actualizar este establecimiento.');
+        }
+
+        // 2. Validación
+        $request->validate([
+            'nombre' => 'required|string|max:100',
+            'direccion' => 'nullable|string|max:255',
+        ]);
+
+        // 3. Actualización
+        $establecimiento->update($request->only(['nombre', 'direccion']));
+
+        // 4. Redirección
+        return redirect()->route('establecimientos.index')
+            ->with('success', 'Establecimiento actualizado con éxito.');
+    }
+
+    /**
+     * Elimina un establecimiento de la base de datos.
+     */
+    public function destroy(Establecimiento $establecimiento)
+    {
+        // 1. Autorización
+        if (Auth::id() !== $establecimiento->user_id) {
+            abort(403, 'No tienes permiso para eliminar este establecimiento.');
+        }
+
+        // 2. Eliminación
+        $establecimiento->delete();
+
+        // 3. Redirección
+        return redirect()->route('establecimientos.index')
+            ->with('success', 'Establecimiento eliminado con éxito.');
+    }
 }
